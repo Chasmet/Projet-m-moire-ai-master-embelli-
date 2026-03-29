@@ -1,0 +1,192 @@
+{
+  "project_name": "Mastering IA",
+  "version": "V13",
+  "language": "fr",
+  "repositories": [
+    {
+      "name": "projet-memoire",
+      "role": "pilotage_et_memoire_projet",
+      "contains": [
+        "ASSISTANT_RULES.md",
+        "NEXT_TASK.md",
+        "PROJECT_STATE.md"
+      ]
+    },
+    {
+      "name": "mastering-ia-app",
+      "role": "application_reelle",
+      "contains": [
+        "frontend",
+        "backend",
+        "shared",
+        "render.yaml"
+      ]
+    }
+  ],
+  "working_rules": {
+    "always_reply_in_french": true,
+    "always_give_full_file": true,
+    "always_mobile_first": true,
+    "always_simple_to_copy_from_phone": true,
+    "always_specify_location": [
+      "frontend",
+      "backend",
+      "shared"
+    ],
+    "when_modifying_file": "always_return_entire_file",
+    "avoid_partial_code_blocks": true
+  },
+  "goal": {
+    "type": "mobile_web_app",
+    "description": "Application web mobile de mastering IA",
+    "features": [
+      "analyser_un_son",
+      "embellir_le_rendu_audio",
+      "appliquer_un_final_master",
+      "exporter_le_fichier_final",
+      "vendre_des_generations",
+      "gerer_une_comptabilite_simple",
+      "preparer_les_declarations_urssaf_trimestrielles"
+    ]
+  },
+  "business_model": {
+    "analysis_free": true,
+    "generation_rule": "1 generation = embellissement + final master + export du fichier final",
+    "processing_cost": "Traiter retire 1 generation",
+    "packs": [
+      {
+        "key": "starter",
+        "label": "Decouverte",
+        "price_eur": 1.49,
+        "generations": 3
+      },
+      {
+        "key": "creator",
+        "label": "Createur",
+        "price_eur": 3.99,
+        "generations": 10
+      },
+      {
+        "key": "studio",
+        "label": "Studio",
+        "price_eur": 7.99,
+        "generations": 25
+      }
+    ]
+  },
+  "payments": {
+    "provider": "Revolut Pro",
+    "status": "version_v1_validation_manuelle_admin",
+    "flow": [
+      "client_paie",
+      "client_clique_jai_paye",
+      "demande_remonte_cote_admin",
+      "admin_valide_ou_annule",
+      "generations_creditees_manuellement"
+    ],
+    "later": [
+      "webhook",
+      "validation_auto",
+      "credit_auto"
+    ]
+  },
+  "admin": {
+    "email": "skypieachannel@gmail.com",
+    "features": [
+      "connexion_admin",
+      "ajouter_ventes",
+      "ajouter_depenses",
+      "ajouter_generations_client",
+      "consulter_rapport_urssaf",
+      "gerer_paiements_clients",
+      "valider_ou_annuler_demandes",
+      "assistant_interne_ia"
+    ]
+  },
+  "current_status": {
+    "frontend_online": true,
+    "backend_online": true,
+    "client_space": true,
+    "client_register": true,
+    "client_login": true,
+    "admin_space": true,
+    "admin_login": true,
+    "generation_balance": true,
+    "audio_analysis": true,
+    "stems_processing": true,
+    "generation_debit": true,
+    "sales_tables": true,
+    "expenses_tables": true,
+    "users_tables": true,
+    "generation_events_tables": true,
+    "manual_generation_add_by_admin": true,
+    "urssaf_report_readable": true
+  },
+  "audio_modes": {
+    "full_file": {
+      "available": true,
+      "supports": [
+        "analyse",
+        "traitement",
+        "telechargement_final"
+      ]
+    },
+    "voice_plus_instrumental": {
+      "available": true,
+      "supports": [
+        "analyse_separee",
+        "plan_ia_separe",
+        "traitement_separe",
+        "recombinaison",
+        "telechargement_final"
+      ]
+    }
+  },
+  "frontend_reference": {
+    "main_file": "frontend/index.html",
+    "stable_reference": "dernier_frontend_index_html_qui_fonctionne",
+    "important_rule": "toujours_remplacer_le_fichier_en_entier",
+    "known_bug_history": {
+      "cause": "html_js_tronque",
+      "effect": "page_visible_mais_boutons_casses"
+    }
+  },
+  "backend_reference": {
+    "base_url": "https://mastering-ia-app.onrender.com",
+    "handles": [
+      "auth_client",
+      "auth_admin",
+      "analyse_audio",
+      "analyse_stems",
+      "plan_ia",
+      "mastering_fichier_complet",
+      "mastering_stems",
+      "compteur_generations",
+      "dashboard_admin",
+      "ventes",
+      "depenses",
+      "rapport_urssaf",
+      "paiements_clients",
+      "assistant_interne_admin"
+    ]
+  },
+  "ux_rules": {
+    "simple_texts": true,
+    "visible_buttons": true,
+    "clear_purchase_path": true,
+    "visible_balance": true,
+    "smooth_client_flow": true
+  },
+  "current_priority": [
+    "garder_application_stable",
+    "ne_pas_casser_le_frontend_qui_fonctionne",
+    "continuer_ameliorations_client_admin_paiement_audio_comptabilite"
+  ],
+  "long_term_vision": [
+    "paiement_client_simple",
+    "generations_creditees",
+    "admin_mobile_complet",
+    "rapport_trimestriel_clair",
+    "application_vendable"
+  ]
+}
