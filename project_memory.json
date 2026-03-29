@@ -1,0 +1,335 @@
+{
+  "project": {
+    "name": "Mastering IA",
+    "language": "fr",
+    "type": "application web mobile",
+    "status_global": "V1 fonctionnelle avec paiement manuel, admin, client, comptabilité, stats et traitement audio",
+    "current_phase": "finalisation V1",
+    "business_model": "vente de générations de traitement audio",
+    "main_goal": "analyser un son, embellir le rendu audio, appliquer un final master, exporter le fichier final, vendre des générations, gérer une comptabilité simple et préparer les déclarations URSSAF trimestrielles"
+  },
+  "versions": {
+    "v1": {
+      "status": "objectif principal",
+      "description": "paiement manuel via lien Revolut, bouton J’ai payé, validation admin manuelle, ajout manuel/assisté des générations"
+    },
+    "v2": {
+      "status": "plus tard",
+      "description": "paiement automatique via API + webhook + crédit automatique des générations"
+    }
+  },
+  "urls": {
+    "frontend_public": "https://mastering-ia-app.vercel.app",
+    "backend_public": "https://mastering-ia-app.onrender.com"
+  },
+  "architecture": {
+    "frontend": {
+      "hosting": "Vercel",
+      "folder": "frontend",
+      "main_files": [
+        "frontend/index.html",
+        "frontend/admin-stats-v2.js",
+        "frontend/vercel.json"
+      ],
+      "notes": [
+        "index.html contient toute l’interface principale",
+        "admin-stats-v2.js est une extension frontend dédiée aux stats admin",
+        "le frontend est pensé mobile d’abord"
+      ]
+    },
+    "backend": {
+      "hosting": "Render",
+      "runtime": "Node.js + Express",
+      "folder": "backend",
+      "main_files": [
+        "backend/server.js",
+        "backend/accounting-v2.js",
+        "backend/assistant-v2.js",
+        "backend/payments-v2.js",
+        "backend/stats-v2.js",
+        "backend/analyze.py",
+        "backend/split_audio_chunks.py",
+        "backend/package.json",
+        "backend/requirements.txt"
+      ],
+      "notes": [
+        "server.js gère les routes principales",
+        "FFmpeg est utilisé pour le traitement audio",
+        "Python est utilisé pour l’analyse audio",
+        "Supabase stocke les données métier",
+        "des extensions backend V2 ont été ajoutées pour la compta, les stats, les paiements et l’assistant admin"
+      ]
+    },
+    "database": {
+      "provider": "Supabase",
+      "known_tables": [
+        "app_users",
+        "app_generation_events",
+        "payment_requests",
+        "admin_sales",
+        "admin_expenses",
+        "projects"
+      ]
+    }
+  },
+  "business_rules": {
+    "analysis": "gratuite",
+    "processing": "Traiter retire 1 génération",
+    "unit_rule": "1 génération = embellissement + final master + export du fichier final",
+    "manual_payment_rule": "le client paie via lien Revolut, clique sur J’ai payé, l’admin valide ensuite la recharge",
+    "client_email_rule": "le client doit utiliser le même email dans l’application que pour la recharge"
+  },
+  "packs": [
+    {
+      "key": "starter",
+      "label": "Découverte - 3 générations",
+      "price_eur": 1.49,
+      "generations": 3,
+      "revolut_link": "https://checkout.revolut.com/pay/006cbbc6-4c6d-4a1d-b144-ecf15893b5f2"
+    },
+    {
+      "key": "creator",
+      "label": "Créateur - 10 générations",
+      "price_eur": 3.99,
+      "generations": 10,
+      "revolut_link": "https://checkout.revolut.com/pay/baa247e6-1222-40ce-82d4-2e7ab7f342d9"
+    },
+    {
+      "key": "studio",
+      "label": "Studio - 25 générations",
+      "price_eur": 7.99,
+      "generations": 25,
+      "revolut_link": "https://checkout.revolut.com/pay/e257b32c-3b50-443d-9e83-faf5fd6f2567"
+    }
+  ],
+  "authentication": {
+    "admin": {
+      "type": "login email + mot de passe",
+      "storage": "token signé en localStorage",
+      "localstorage_keys": [
+        "mastering-admin-token",
+        "mastering-admin-email"
+      ],
+      "known_admin_email": "skypieachannel@gmail.com"
+    },
+    "client": {
+      "type": "inscription + connexion email/mot de passe",
+      "storage": "token signé en localStorage",
+      "localstorage_keys": [
+        "mastering-client-token",
+        "mastering-client-email"
+      ]
+    }
+  },
+  "frontend_features": {
+    "client_space": [
+      "inscription",
+      "connexion",
+      "solde de générations",
+      "liste des demandes de recharge",
+      "actualisation du compte",
+      "déconnexion"
+    ],
+    "audio_space": [
+      "mode fichier complet",
+      "mode voix + instru",
+      "upload audio",
+      "préécoute audio",
+      "analyse",
+      "traitement",
+      "téléchargement du fichier final"
+    ],
+    "admin_space": [
+      "connexion admin",
+      "liste des paiements en attente",
+      "liste des paiements traités / annulés",
+      "ajout manuel de générations",
+      "ajout de ventes",
+      "ajout de dépenses",
+      "rapport URSSAF",
+      "assistant interne IA",
+      "stats business V2"
+    ],
+    "ui_notes": [
+      "interface optimisée mobile",
+      "gros boutons",
+      "parcours client simple",
+      "thème clair / sombre",
+      "admin-stats-v2.js doit être branché dans index.html pour afficher les stats business"
+    ]
+  },
+  "backend_routes_known": {
+    "public": [
+      "GET /",
+      "GET /health"
+    ],
+    "client": [
+      "POST /api/client/register",
+      "POST /api/client/login",
+      "GET /api/client/me",
+      "GET /api/client/payment-requests",
+      "POST /api/client/payment-requests"
+    ],
+    "admin": [
+      "POST /api/admin/login",
+      "GET /api/admin/users",
+      "POST /api/admin/users/add-generations",
+      "GET /api/admin/dashboard",
+      "GET /api/admin/payment-requests",
+      "POST /api/admin/payment-requests/:id/approve",
+      "POST /api/admin/payment-requests/:id/cancel",
+      "POST /api/admin/internal-assistant",
+      "POST /api/admin/sales",
+      "POST /api/admin/expenses"
+    ],
+    "audio": [
+      "POST /api/analyze",
+      "POST /api/analyze-stems",
+      "POST /api/plan-stems",
+      "POST /api/mastering-plan",
+      "POST /api/master",
+      "POST /api/master-stems"
+    ],
+    "misc": [
+      "POST /api/save-test"
+    ]
+  },
+  "audio_processing": {
+    "analysis_engine": {
+      "python_file": "backend/analyze.py",
+      "description": "analyse audio source avant traitement"
+    },
+    "processing_engine": {
+      "tool": "FFmpeg",
+      "description": "embellissement, EQ, compression, limitation, loudnorm, recombinaison stems"
+    },
+    "flows": {
+      "full_file": [
+        "upload du morceau complet",
+        "analyse",
+        "génération d’un plan IA",
+        "traitement FFmpeg",
+        "débit d’1 génération si client",
+        "export WAV"
+      ],
+      "stems": [
+        "upload voix + instrumental",
+        "analyse séparée",
+        "plan IA séparé",
+        "traitement voix",
+        "traitement instrumental",
+        "recombinaison",
+        "final master",
+        "débit d’1 génération si client",
+        "export WAV"
+      ]
+    }
+  },
+  "ai_usage": {
+    "models_seen_in_code": [
+      {
+        "usage": "plan mastering global",
+        "model": "gpt-5.4"
+      },
+      {
+        "usage": "plan stems",
+        "model": "gpt-5.4"
+      },
+      {
+        "usage": "assistant interne admin",
+        "model": "gpt-5-mini"
+      },
+      {
+        "usage": "rapport URSSAF formaté",
+        "model": "gpt-5.4"
+      }
+    ],
+    "assistant_admin_role": "aider l’admin à comprendre un message client, définir la priorité, proposer une réponse, suggérer une action et accélérer le support"
+  },
+  "accounting": {
+    "features": [
+      "enregistrement manuel des ventes",
+      "enregistrement manuel des dépenses",
+      "rapport URSSAF trimestriel lisible",
+      "marge interne indicative",
+      "ventilation mensuelle"
+    ],
+    "expected_report_format": {
+      "title": "Déclaration URSSAF",
+      "fields": [
+        "Période",
+        "Revenus mensuels",
+        "Total à déclarer",
+        "Dépenses internes",
+        "Total dépenses internes",
+        "Marge interne indicative"
+      ]
+    }
+  },
+  "stats_v2": {
+    "goal": "afficher les stats business dans l’espace admin",
+    "frontend_file": "frontend/admin-stats-v2.js",
+    "expected_widgets": [
+      "CA du mois",
+      "CA du trimestre",
+      "clients",
+      "clients actifs",
+      "clients à 0 génération",
+      "paiements en attente",
+      "pack le plus vendu",
+      "revenus mensuels du trimestre"
+    ],
+    "important_note": "les stats frontend existent via admin-stats-v2.js, mais elles nécessitent que index.html soit branché correctement"
+  },
+  "environment_variables_backend": [
+    "OPENAI_API_KEY",
+    "SUPABASE_URL",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "ADMIN_EMAIL",
+    "ADMIN_PASSWORD",
+    "ADMIN_SECRET",
+    "CLIENT_SECRET",
+    "PORT"
+  ],
+  "current_state_snapshot": {
+    "backend_v2_extensions_present": true,
+    "frontend_admin_stats_file_present": true,
+    "manual_payment_v1_ready": true,
+    "automatic_payment_v2_ready": false,
+    "index_html_final_version_prepared": true,
+    "final_frontend_redeploy_may_be_needed": true,
+    "final_backend_redeploy_may_be_needed": true
+  },
+  "known_constraints": [
+    "pas d’automatisation de paiement en V1",
+    "pas de webhook paiement en V1",
+    "validation admin encore nécessaire après paiement",
+    "GitHub mobile rend les grosses modifications de index.html difficiles",
+    "la méthode la plus simple sur téléphone est souvent de remplacer tout le fichier index.html au lieu d’éditer des petits morceaux"
+  ],
+  "resume_workflow_if_project_returns": {
+    "step_1": "vérifier si frontend/index.html actuellement en ligne contient bien le branchement de frontend/admin-stats-v2.js",
+    "step_2": "vérifier si le dernier backend Render a bien été redéployé avec server.js et les fichiers V2",
+    "step_3": "tester login admin, stats admin, paiements en attente, validation paiement, ajout vente, ajout dépense, assistant admin, rapport URSSAF",
+    "step_4": "si tout fonctionne, considérer V1 terminée",
+    "step_5": "quand une vraie API de paiement sera disponible, commencer la V2 avec webhook et crédit automatique des générations"
+  },
+  "v2_roadmap_later": [
+    "intégrer une API de paiement",
+    "recevoir un webhook de confirmation de paiement",
+    "créditer automatiquement les générations",
+    "ajouter éventuellement un mail automatique de confirmation",
+    "supprimer au maximum les validations manuelles"
+  ],
+  "important_user_preferences": {
+    "response_language": "français",
+    "device": "téléphone Android",
+    "coding_style": [
+      "donner le nom du fichier",
+      "donner le code complet",
+      "faire simple à copier",
+      "éviter les modifications floues",
+      "privilégier les solutions mobiles"
+    ]
+  }
+}
